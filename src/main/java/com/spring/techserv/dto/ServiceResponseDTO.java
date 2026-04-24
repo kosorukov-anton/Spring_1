@@ -6,5 +6,4 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record ServiceResponseDTO(int id, String title, BigDecimal cost ) {
-}
+public record ServiceResponseDTO(int id, String title, BigDecimal cost ) { }

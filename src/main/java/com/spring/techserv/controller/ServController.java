@@ -29,7 +29,7 @@ public class ServController {
         return null;
     }
     //Редактирование услуги
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     public Long editService(
             @Positive
             @PathVariable
