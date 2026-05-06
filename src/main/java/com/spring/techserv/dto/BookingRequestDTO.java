@@ -1,12 +1,14 @@
 package com.spring.techserv.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 public record BookingRequestDTO(
     @Positive
-    int idService,
+    long idService,
 
     @NotNull
     @Future

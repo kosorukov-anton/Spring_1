@@ -3,32 +3,48 @@ package com.spring.techserv.controller;
 import com.spring.techserv.constants.BookingStatus;
 import com.spring.techserv.dto.BookingRequestDTO;
 import com.spring.techserv.dto.BookingResponseDTO;
+import com.spring.techserv.dto.ServiceRequestDTO;
+import com.spring.techserv.service.ServiceBooking;
+import com.spring.techserv.service.ServiceTechServ;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Validated
 @RequestMapping("/api/v1/booking")
 @RestController
 public class BookingController {
+    private final ServiceBooking serviceBooking;
+
     //Создание брони
-    //{"idService": 1, "time" : "2027-01-19T15:10:06.780"}
+    //{"idService": 1, "time" : "2027-01-19T15:10:06.780         "}
     @PostMapping
-    public Long createBooking(@Valid @RequestBody BookingRequestDTO bookingRequest){
-        return 0L;
+    public ResponseEntity<?>  createBooking(@Valid @RequestBody BookingRequestDTO bookingRequest){
+        URI uri = URI.create("/api/v1/booking?id=" +
+                serviceBooking.registerBooking(bookingRequest));
+        return ResponseEntity.created(uri) // HttpStatu2s 201
+                .build();
+
     }
+
     //Получение списка броней
     @GetMapping
     public List<BookingResponseDTO> getAllBooking(){
         return null;
     }
+
     //Отмена брони
     @PutMapping("/cancel/{id}")
     public Long editService(
@@ -37,8 +53,8 @@ public class BookingController {
                     ("id") int idBooking){
         return 0L;
     }
-    //Редактирование времени брони
 
+    //Редактирование времени брони
    /* @Future
     @RequestBody
     LocalDateTime newTime*/
@@ -56,8 +72,18 @@ public class BookingController {
     //Получение списка завершенных броней (предотавленные услуги)
     @GetMapping("/complited")
     public List<BookingResponseDTO> getComplitedBookings() {
-        //log.info("GET request with animal type = {}", type);
+        //log.info("GET request with anim
+        // al type = {}", type);
         return null;
+    }
+
+    //Получение брони по дате времени
+    @GetMapping("/byTime")
+    public BookingResponseDTO getByTime(
+            @RequestParam("time")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDateTime time) {
+            return serviceBooking.findByTime(time);
     }
 
 }

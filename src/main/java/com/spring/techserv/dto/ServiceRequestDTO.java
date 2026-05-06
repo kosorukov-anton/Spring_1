@@ -11,6 +11,6 @@ public record ServiceRequestDTO(
         @NotEmpty //применяется к CharSequence, Collection, Map или Array и проверяет, что он не null имеет размер больше 0.
         String title,
         @DecimalMin(value = "1000", inclusive = false, message = "Цена должна быть не меньше 1000.00")
-        @Digits(integer = 6, fraction = 0)
+        @Digits(integer = 4, fraction = 0)
         BigDecimal cost) {
 }
