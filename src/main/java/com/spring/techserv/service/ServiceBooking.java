@@ -1,5 +1,6 @@
 package com.spring.techserv.service;
 
+import com.spring.techserv.dto.BookingCostResponseDTO;
 import com.spring.techserv.dto.BookingRequestDTO;
 import com.spring.techserv.dto.BookingResponseDTO;
 import com.spring.techserv.entity.Booking;
@@ -13,7 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -41,6 +47,23 @@ public class ServiceBooking {
         bookingMapper.entityToMap(booking);
         return bookingMapper.entityToMap(booking);
     }
+
+    public HashMap<LocalDate, BigDecimal> findCostByPeriod(LocalDateTime timeStart,LocalDateTime timeEnd) {
+        System.out.println("ЗАПРОС СПИСКА");
+        List<Booking> bookings  = bookingRepository.findByFilter(timeStart, timeEnd);
+        if (bookings.isEmpty()) throw new BookingException(HttpStatus.NOT_FOUND, "Записи не найдены");
+
+        HashMap<LocalDate, BigDecimal> proceeds = new HashMap<>();
+        LocalDate date;
+        for (Booking booking:bookings){
+            date=booking.getTime().toLocalDate();
+            if(proceeds.containsKey(date)){proceeds.put(date,proceeds.get(date).add(booking.getFixedCost()));}
+            else{proceeds.put(date,booking.getFixedCost());}
+        }
+
+        return proceeds;
+    }
+
 
 
 

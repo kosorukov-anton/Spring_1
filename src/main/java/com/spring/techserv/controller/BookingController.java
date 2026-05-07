@@ -1,6 +1,7 @@
 package com.spring.techserv.controller;
 
 import com.spring.techserv.constants.BookingStatus;
+import com.spring.techserv.dto.BookingCostResponseDTO;
 import com.spring.techserv.dto.BookingRequestDTO;
 import com.spring.techserv.dto.BookingResponseDTO;
 import com.spring.techserv.dto.ServiceRequestDTO;
@@ -11,16 +12,20 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
-
+@Slf4j
 @RequiredArgsConstructor
 @Validated
 @RequestMapping("/api/v1/booking")
@@ -84,6 +89,17 @@ public class BookingController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDateTime time) {
             return serviceBooking.findByTime(time);
+    }
+    // Получение списка брони
+    @GetMapping(path = "/costByPeriod", produces = "application/json")
+    public ResponseEntity<HashMap<LocalDate, BigDecimal>> getBookingByPeriod(
+            @RequestParam("timeStart")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime timeStart,
+            @RequestParam("timeStop")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime timeStop ){
+        //log.info("GET request with animal type = {}", type);
+            return new ResponseEntity<>(serviceBooking.findCostByPeriod(timeStart,timeStop), HttpStatus.OK);
+        //  return null;
     }
 
 }

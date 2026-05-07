@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Entity
 @Builder
@@ -34,10 +35,11 @@ public class Booking {
 
     @Timestamp
     @Column(name = "timeCreate")
-    private  LocalDateTime timeCreate;
+    private LocalDateTime timeCreate;
 
     @Value("ACTIVE")
     @Column(name = "status")
+    @Enumerated(value = EnumType.STRING)
     private BookingStatus bookingStatus;
 
 }
