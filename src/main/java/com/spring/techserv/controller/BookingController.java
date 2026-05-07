@@ -99,7 +99,6 @@ public class BookingController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime timeStop ){
         //log.info("GET request with animal type = {}", type);
             return new ResponseEntity<>(serviceBooking.findCostByPeriod(timeStart,timeStop), HttpStatus.OK);
-        //  return null;
     }
 
 }
